@@ -1,0 +1,26 @@
+<Window x:Class="DeepSeekPet.Windows.SpeechBubble"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="DeepSeekPet 气泡"
+        SizeToContent="WidthAndHeight"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        ResizeMode="NoResize" ShowInTaskbar="False" ShowActivated="False" Topmost="True"
+        WindowStartupLocation="Manual" SnapsToDevicePixels="True" UseLayoutRounding="True"
+        TextOptions.TextFormattingMode="Display"
+        FontFamily="{StaticResource AppFont}">
+  <Grid x:Name="RootGrid" Margin="10,6,10,8">
+    <Border x:Name="Card" Background="White" CornerRadius="12" BorderThickness="1"
+            BorderBrush="{StaticResource CardBorderBrush}" Effect="{StaticResource CardShadow}"
+            Padding="12,9" MinWidth="130" MaxWidth="290">
+      <TextBlock x:Name="MsgText" TextWrapping="Wrap" FontSize="12.5"
+                 Foreground="{StaticResource TextBrush}" LineHeight="18"/>
+    </Border>
+    <!-- 指向桌宠的小尾巴 -->
+    <Path x:Name="TailDown" Panel.ZIndex="2" Data="M0,0 L12,0 L6,7 Z" Fill="White"
+          HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,1"
+          Width="12" Height="7" Stretch="None"/>
+    <Path x:Name="TailUp" Panel.ZIndex="2" Visibility="Collapsed" Data="M0,7 L12,7 L6,0 Z" Fill="White"
+          HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,1,0,0"
+          Width="12" Height="7" Stretch="None"/>
+  </Grid>
+</Window>

@@ -1,0 +1,289 @@
+<Window x:Class="DeepSeekPet.Windows.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="设置 · DeepSeekPet"
+        Width="486" Height="672"
+        ResizeMode="NoResize" WindowStartupLocation="CenterScreen"
+        ShowInTaskbar="False" Topmost="True" Background="#FFFFFF"
+        FontFamily="{StaticResource AppFont}">
+  <Window.Resources>
+    <!-- 密码输入框样式（与 InputBox 同观感） -->
+    <Style x:Key="PassBox" TargetType="PasswordBox">
+      <Setter Property="FontSize" Value="13"/>
+      <Setter Property="Foreground" Value="#23293A"/>
+      <Setter Property="Height" Value="32"/>
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="PasswordBox">
+            <Border x:Name="Bd" CornerRadius="8" Background="White" BorderThickness="1" BorderBrush="#DFE4F0">
+              <ScrollViewer x:Name="PART_ContentHost" Margin="9,0" VerticalAlignment="Center"/>
+            </Border>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Bd" Property="BorderBrush" Value="#C6D0EC"/></Trigger>
+              <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="Bd" Property="BorderBrush" Value="#4D6BFE"/></Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+    <Style x:Key="FieldInput" TargetType="TextBox" BasedOn="{StaticResource InputBox}">
+      <Setter Property="Height" Value="32"/>
+    </Style>
+    <Style x:Key="FieldInputMulti" TargetType="TextBox" BasedOn="{StaticResource InputBox}">
+      <Setter Property="AcceptsReturn" Value="True"/>
+      <Setter Property="TextWrapping" Value="Wrap"/>
+      <Setter Property="VerticalContentAlignment" Value="Top"/>
+      <Setter Property="Padding" Value="0,5"/>
+      <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+    </Style>
+    <Style x:Key="RowLabel" TargetType="TextBlock">
+      <Setter Property="FontSize" Value="12.5"/>
+      <Setter Property="Foreground" Value="#3A4256"/>
+      <Setter Property="VerticalAlignment" Value="Center"/>
+      <Setter Property="Margin" Value="0,0,10,0"/>
+    </Style>
+  </Window.Resources>
+
+  <StackPanel Margin="22,16,22,18">
+    <TextBlock x:Name="TitleLabel" Text="设置" FontSize="15.5" FontWeight="SemiBold"
+               Foreground="{StaticResource TextBrush}"/>
+    <TextBlock Text="修改后点「保存」立即生效，无需重启" FontSize="11"
+               Foreground="{StaticResource SubTextBrush}" Margin="0,4,0,0"/>
+
+    <!-- 页签 -->
+    <StackPanel Orientation="Horizontal" Margin="0,14,0,0">
+      <RadioButton x:Name="TabAi" Style="{StaticResource ChipRadio}" Content="AI 对话"
+                   IsChecked="True" GroupName="SettingsTab"/>
+      <RadioButton x:Name="TabSearch" Style="{StaticResource ChipRadio}" Content="联网搜索"
+                   Margin="8,0,0,0" GroupName="SettingsTab"/>
+      <RadioButton x:Name="TabPersona" Style="{StaticResource ChipRadio}" Content="人设卡"
+                   Margin="8,0,0,0" GroupName="SettingsTab"/>
+      <RadioButton x:Name="TabAbout" Style="{StaticResource ChipRadio}" Content="关于"
+                   Margin="8,0,0,0" GroupName="SettingsTab"/>
+    </StackPanel>
+
+    <Border Height="1" Background="{StaticResource LineBrush}" Margin="0,12,0,0"/>
+
+    <ScrollViewer Height="430" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                  Margin="0,10,0,0">
+      <Grid>
+        <!-- ================= AI 对话 ================= -->
+        <StackPanel x:Name="AiPanel">
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="138"/>
+              <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="API Key" Style="{StaticResource RowLabel}" Grid.Row="0"/>
+            <Grid Grid.Row="0" Grid.Column="1">
+              <PasswordBox x:Name="PbApiKey" Style="{StaticResource PassBox}"/>
+              <TextBox x:Name="TbApiKeyPlain" Style="{StaticResource FieldInput}" Visibility="Collapsed"/>
+            </Grid>
+
+            <TextBlock Text="显示密钥" Style="{StaticResource RowLabel}" Grid.Row="1" Margin="0,8,10,0"/>
+            <CheckBox x:Name="CkShowKey" Grid.Row="1" Grid.Column="1" Margin="0,8,0,0"
+                      VerticalAlignment="Center" Content="以明文显示（本机配置文件本身就是明文存储）"
+                      FontSize="11.5" Foreground="{StaticResource SubTextBrush}"/>
+
+            <TextBlock Text="接口地址 Base URL" Style="{StaticResource RowLabel}" Grid.Row="2" Margin="0,10,10,0"/>
+            <TextBox x:Name="TbBaseUrl" Style="{StaticResource FieldInput}" Grid.Row="2" Grid.Column="1" Margin="0,10,0,0"
+                     ToolTip="任意 OpenAI 兼容端点；本地 Ollama 示例：http://127.0.0.1:11434/v1"/>
+
+            <TextBlock Text="模型" Style="{StaticResource RowLabel}" Grid.Row="3" Margin="0,10,10,0"/>
+            <TextBox x:Name="TbModel" Style="{StaticResource FieldInput}" Grid.Row="3" Grid.Column="1" Margin="0,10,0,0"/>
+
+            <TextBlock Text="超时（秒）" Style="{StaticResource RowLabel}" Grid.Row="4" Margin="0,10,10,0"/>
+            <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="1" Margin="0,10,0,0">
+              <TextBox x:Name="TbTimeout" Style="{StaticResource FieldInput}" Width="70" HorizontalContentAlignment="Center"/>
+              <TextBlock Text="采样温度" Style="{StaticResource RowLabel}" Margin="18,0,10,0"/>
+              <TextBox x:Name="TbTemperature" Style="{StaticResource FieldInput}" Width="70" HorizontalContentAlignment="Center"/>
+            </StackPanel>
+
+            <TextBlock Text="记忆轮数" Style="{StaticResource RowLabel}" Grid.Row="5" Margin="0,10,10,0"/>
+            <StackPanel Orientation="Horizontal" Grid.Row="5" Grid.Column="1" Margin="0,10,0,0">
+              <TextBox x:Name="TbMemoryRounds" Style="{StaticResource FieldInput}" Width="70" HorizontalContentAlignment="Center"/>
+              <TextBlock Text="轮（建议 20–30）" Style="{StaticResource RowLabel}" Margin="8,0,0,0"
+                         Foreground="{StaticResource SubTextBrush}" FontSize="11.5"/>
+            </StackPanel>
+
+            <TextBlock Text="连接测试" Style="{StaticResource RowLabel}" Grid.Row="6" Margin="0,16,10,0"/>
+            <StackPanel Orientation="Horizontal" Grid.Row="6" Grid.Column="1" Margin="0,16,0,0">
+              <Button x:Name="BtnTestLlm" Content="测试连接" Style="{StaticResource GhostBtn}" Click="BtnTestLlm_Click"/>
+              <TextBlock x:Name="TestLlmResult" Style="{StaticResource RowLabel}" Margin="12,0,0,0"
+                         FontSize="11.5" TextTrimming="CharacterEllipsis" MaxWidth="220"/>
+            </StackPanel>
+          </Grid>
+
+          <Border Background="#F7F8FC" CornerRadius="8" Padding="10,8" Margin="0,16,0,0">
+            <TextBlock TextWrapping="Wrap" FontSize="11.5" Foreground="{StaticResource SubTextBrush}"
+                       Text="密钥也可用环境变量 DEEPSEEK_PET_API_KEY / DEEPSEEK_API_KEY（环境变量优先级更高）。未配置密钥时，聊天不可用，但「提醒我几点做什么」这类本地指令仍然有效。"/>
+          </Border>
+        </StackPanel>
+
+        <!-- ================= 联网搜索 ================= -->
+        <StackPanel x:Name="SearchPanel" Visibility="Collapsed">
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="138"/>
+              <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="搜索后端" Style="{StaticResource RowLabel}" Grid.Row="0"/>
+            <ComboBox x:Name="CbProvider" Grid.Row="0" Grid.Column="1">
+              <ComboBoxItem Content="Tavily（推荐，需要 API Key）" Tag="tavily"/>
+              <ComboBoxItem Content="SearXNG（自建实例，无需 Key）" Tag="searxng"/>
+              <ComboBoxItem Content="关闭联网搜索" Tag="none"/>
+            </ComboBox>
+
+            <TextBlock Text="Tavily API Key" Style="{StaticResource RowLabel}" Grid.Row="1" Margin="0,12,10,0"/>
+            <TextBox x:Name="TbSearchKey" Style="{StaticResource FieldInput}" Grid.Row="1" Grid.Column="1" Margin="0,12,0,0"
+                     ToolTip="从 tavily.com 获取；也可用环境变量 TAVILY_API_KEY"/>
+
+            <TextBlock Text="SearXNG 地址" Style="{StaticResource RowLabel}" Grid.Row="2" Margin="0,12,10,0"/>
+            <TextBox x:Name="TbSearxng" Style="{StaticResource FieldInput}" Grid.Row="2" Grid.Column="1" Margin="0,12,0,0"
+                     ToolTip="示例：http://127.0.0.1:8888（实例需开启 JSON 输出格式）"/>
+
+            <TextBlock Text="缓存 / 条数" Style="{StaticResource RowLabel}" Grid.Row="3" Margin="0,12,10,0"/>
+            <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1" Margin="0,12,0,0">
+              <TextBox x:Name="TbCacheMinutes" Style="{StaticResource FieldInput}" Width="70" HorizontalContentAlignment="Center"/>
+              <TextBlock Text="分钟" Style="{StaticResource RowLabel}" Margin="8,0,18,0" FontSize="11.5"/>
+              <TextBox x:Name="TbMaxResults" Style="{StaticResource FieldInput}" Width="70" HorizontalContentAlignment="Center"/>
+              <TextBlock Text="条结果" Style="{StaticResource RowLabel}" Margin="8,0,0,0" FontSize="11.5"/>
+            </StackPanel>
+          </Grid>
+
+          <CheckBox x:Name="CkEnableSearch" Margin="0,16,0,0" FontSize="12.5"
+                    Content="允许鲸鱼娘在需要时调用联网搜索（工具：web_search）"/>
+
+          <Border Background="#F7F8FC" CornerRadius="8" Padding="10,8" Margin="0,14,0,0">
+            <TextBlock TextWrapping="Wrap" FontSize="11.5" Foreground="{StaticResource SubTextBrush}"
+                       Text="搜索结果显示在聊天气泡里并附来源链接；未配置搜索时会自动隐藏该工具，不会影响正常聊天。相同查询 30 分钟内命中本地缓存，不重复打网络。"/>
+          </Border>
+        </StackPanel>
+
+        <!-- ================= 人设卡 ================= -->
+        <StackPanel x:Name="PersonaPanel" Visibility="Collapsed">
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="138"/>
+              <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="名字" Style="{StaticResource RowLabel}" Grid.Row="0"/>
+            <TextBox x:Name="TbPersonaName" Style="{StaticResource FieldInput}" Grid.Row="0" Grid.Column="1"/>
+
+            <TextBlock Text="身份" Style="{StaticResource RowLabel}" Grid.Row="1" Margin="0,10,10,0"/>
+            <TextBox x:Name="TbCreature" Style="{StaticResource FieldInput}" Grid.Row="1" Grid.Column="1" Margin="0,10,0,0"/>
+
+            <TextBlock Text="性格" Style="{StaticResource RowLabel}" Grid.Row="2" Margin="0,10,10,0" VerticalAlignment="Top"/>
+            <TextBox x:Name="TbPersonality" Style="{StaticResource FieldInputMulti}" Grid.Row="2" Grid.Column="1"
+                     Height="62" Margin="0,10,0,0"/>
+
+            <TextBlock Text="说话风格" Style="{StaticResource RowLabel}" Grid.Row="3" Margin="0,10,10,0" VerticalAlignment="Top"/>
+            <TextBox x:Name="TbSpeechStyle" Style="{StaticResource FieldInputMulti}" Grid.Row="3" Grid.Column="1"
+                     Height="48" Margin="0,10,0,0"/>
+
+            <TextBlock Text="背景" Style="{StaticResource RowLabel}" Grid.Row="4" Margin="0,10,10,0" VerticalAlignment="Top"/>
+            <TextBox x:Name="TbBackground" Style="{StaticResource FieldInputMulti}" Grid.Row="4" Grid.Column="1"
+                     Height="48" Margin="0,10,0,0"/>
+
+            <TextBlock Text="行为规则" Style="{StaticResource RowLabel}" Grid.Row="5" Margin="0,10,10,0" VerticalAlignment="Top"/>
+            <StackPanel Grid.Row="5" Grid.Column="1" Margin="0,10,0,0">
+              <TextBox x:Name="TbRules" Style="{StaticResource FieldInputMulti}" Height="72"/>
+              <TextBlock Text="每行一条规则" FontSize="10.5" Foreground="{StaticResource SubTextBrush}" Margin="2,3,0,0"/>
+            </StackPanel>
+
+            <TextBlock Text="口头禅" Style="{StaticResource RowLabel}" Grid.Row="6" Margin="0,10,10,0" VerticalAlignment="Top"/>
+            <StackPanel Grid.Row="6" Grid.Column="1" Margin="0,10,0,0">
+              <TextBox x:Name="TbCatchphrases" Style="{StaticResource FieldInputMulti}" Height="48"/>
+              <TextBlock Text="每行一条" FontSize="10.5" Foreground="{StaticResource SubTextBrush}" Margin="2,3,0,0"/>
+            </StackPanel>
+
+            <TextBlock Text="问候语" Style="{StaticResource RowLabel}" Grid.Row="7" Margin="0,10,10,0"/>
+            <TextBox x:Name="TbGreeting" Style="{StaticResource FieldInput}" Grid.Row="7" Grid.Column="1" Margin="0,10,0,0"/>
+
+            <TextBlock Text="自定义摘要" Style="{StaticResource RowLabel}" Grid.Row="8" Margin="0,10,10,0" VerticalAlignment="Top"/>
+            <StackPanel Grid.Row="8" Grid.Column="1" Margin="0,10,0,0">
+              <TextBox x:Name="TbSummary" Style="{StaticResource FieldInputMulti}" Height="48"/>
+              <TextBlock Text="留空 = 由程序自动从上面字段生成精简摘要（推荐）" FontSize="10.5"
+                         Foreground="{StaticResource SubTextBrush}" Margin="2,3,0,0"/>
+            </StackPanel>
+          </Grid>
+
+          <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
+            <Button x:Name="BtnResetPersona" Content="恢复鲸鱼娘默认预设" Style="{StaticResource GhostBtn}"
+                    Click="BtnResetPersona_Click"/>
+            <TextBlock Text="会覆盖当前输入框内容，保存后生效" FontSize="10.5"
+                       Foreground="{StaticResource SubTextBrush}" Margin="10,0,0,0" VerticalAlignment="Center"/>
+          </StackPanel>
+        </StackPanel>
+
+        <!-- ================= 关于 ================= -->
+        <StackPanel x:Name="AboutPanel" Visibility="Collapsed">
+          <TextBlock Text="DeepSeekPet · 鲸鱼娘桌宠" FontSize="14" FontWeight="SemiBold"
+                     Foreground="{StaticResource TextBrush}"/>
+          <TextBlock x:Name="AboutVersion" FontSize="12" Foreground="{StaticResource SubTextBrush}" Margin="0,6,0,0"/>
+          <Border Background="#F7F8FC" CornerRadius="8" Padding="12,10" Margin="0,14,0,0">
+            <StackPanel>
+              <TextBlock x:Name="AboutDataDir" FontSize="11.5" TextWrapping="Wrap"
+                         Foreground="{StaticResource TextBrush}"/>
+              <TextBlock Text="• 配置文件：appconfig.json（本页保存后自动写入，免重启生效）" FontSize="11.5"
+                         Foreground="{StaticResource SubTextBrush}" TextWrapping="Wrap" Margin="0,5,0,0"/>
+              <TextBlock Text="• 人设卡：persona.json（改文件同样免重启生效）" FontSize="11.5"
+                         Foreground="{StaticResource SubTextBrush}" TextWrapping="Wrap" Margin="0,5,0,0"/>
+              <TextBlock Text="• 数据与对话：pet.db（SQLite，自动备份与迁移）" FontSize="11.5"
+                         Foreground="{StaticResource SubTextBrush}" TextWrapping="Wrap" Margin="0,5,0,0"/>
+              <TextBlock Text="• 日志：logs 目录（滚动保留 7 天）" FontSize="11.5"
+                         Foreground="{StaticResource SubTextBrush}" TextWrapping="Wrap" Margin="0,5,0,0"/>
+            </StackPanel>
+          </Border>
+          <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
+            <Button Content="打开数据目录" Style="{StaticResource GhostBtn}" Click="BtnOpenData_Click"/>
+            <Button Content="打开日志目录" Style="{StaticResource GhostBtn}" Margin="8,0,0,0" Click="BtnOpenLogs_Click"/>
+          </StackPanel>
+          <TextBlock Text="「DeepSeek」及鲸鱼娘二创形象版权归 DeepSeek 与社区原作者所有；本软件为个人非商用工具。"
+                     FontSize="10.5" Foreground="{StaticResource SubTextBrush}" TextWrapping="Wrap" Margin="0,16,0,0"/>
+        </StackPanel>
+      </Grid>
+    </ScrollViewer>
+
+    <TextBlock x:Name="ErrorText" FontSize="11.5" Foreground="{StaticResource DangerBrush}"
+               Margin="0,10,0,0" Visibility="Collapsed" TextWrapping="Wrap"/>
+
+    <Grid Margin="0,14,0,0">
+      <TextBlock x:Name="SavedHint" Text="" FontSize="11.5" Foreground="#2E9E5B"
+                 VerticalAlignment="Center" HorizontalAlignment="Left"/>
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+        <Button Style="{StaticResource GhostBtn}" Content="取消" Click="BtnCancel_Click"/>
+        <Button Style="{StaticResource PrimaryBtn}" Content="保存" Margin="8,0,0,0" Click="BtnSave_Click"/>
+      </StackPanel>
+    </Grid>
+  </StackPanel>
+</Window>

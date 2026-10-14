@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>DeepSeekPet</AssemblyName>
+    <RootNamespace>DeepSeekPet</RootNamespace>
+    <Version>1.2.0</Version>
+    <Product>DeepSeekPet</Product>
+    <Description>DeepSeek 鲸鱼娘桌宠 + 每日任务提醒 + AI 对话</Description>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\app.ico</ApplicationIcon>
+    <RollForward>LatestMajor</RollForward>
+    <SatelliteResourceLanguages>zh-Hans;en</SatelliteResourceLanguages>
+    <InvariantGlobalization>false</InvariantGlobalization>
+    <EnableWindowsTargeting>false</EnableWindowsTargeting>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CA1416;WFAC010</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.10" />
+    <PackageReference Include="Microsoft.Win32.SystemEvents" Version="8.0.0" />
+  </ItemGroup>
+
+  <!-- UseWindowsForms 会注入 WinForms 隐式 using，与 WPF 的 Application/MouseEventArgs 等类型冲突；
+       移除全局 using，托盘等需要的文件显式 using System.Windows.Forms / System.Drawing -->
+  <ItemGroup>
+    <Using Remove="System.Windows.Forms" />
+    <Using Remove="System.Drawing" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\pet.png" />
+    <Resource Include="Assets\pet-alt-maid.png" />
+  </ItemGroup>
+
+</Project>
